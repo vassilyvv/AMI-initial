@@ -44,7 +44,6 @@ def configure(project_name: str, docker_image_name: str, api_domain: str, celery
     copy_templates_to_outputs_directory(celery)
     configure_nginx(NGINX_CONFIG_FILENAME, project_name, api_domain)
     configure_docker_compose(DOCKER_COMPOSE_FILENAME, project_name, docker_image_name)
-    shutil.move('sample.env', f'{project_name}.env')
 
 
 if __name__ == '__main__':
