@@ -9,8 +9,8 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - ./ssl/certs:/etc/ssl/certs
-      - ./ssl/private:/etc/ssl/private
+      - ./ssl/server.cert:/etc/ssl/certs/server.cert
+      - ./ssl/server.key:/etc/ssl/private/server.key
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
 
   django:
