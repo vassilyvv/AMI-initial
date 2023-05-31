@@ -1,3 +1,6 @@
+import os
+
+
 def configure(filename: str, project_name: str, api_domain: str):
     final_result = []
     with open(filename, 'r') as f:
