@@ -7,8 +7,8 @@ from utils.docker_compose import configure as configure_docker_compose
 from utils.nginx import configure as configure_nginx
 from validators import validate_project_name, validate_domain, validate_docker_image_name
 
-DOCKER_COMPOSE_FILENAME = 'docker-compose.yaml'
-NGINX_CONFIG_FILENAME = 'nginx.conf'
+DOCKER_COMPOSE_FILENAME = '/home/ubuntu/docker-compose.yaml'
+NGINX_CONFIG_FILENAME = '/home/ubuntu/nginx.conf'
 
 
 def create_outputs_directory():
@@ -17,11 +17,11 @@ def create_outputs_directory():
 
 def copy_templates_to_outputs_directory(use_celery: bool):
     shutil.copyfile(
-        f'templates/docker-compose/docker-compose-{"" if use_celery else "no-"}celery.yaml',
+        f'/home/ubuntu/templates/docker-compose/docker-compose-{"" if use_celery else "no-"}celery.yaml',
         DOCKER_COMPOSE_FILENAME
     )
     shutil.copyfile(
-        f'templates/nginx.conf',
+        f'/home/ubuntu/templates/nginx.conf',
         NGINX_CONFIG_FILENAME
     )
 
