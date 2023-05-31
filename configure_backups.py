@@ -1,4 +1,5 @@
 import stat
+import os
 from pathlib import Path
 
 import click
@@ -14,8 +15,8 @@ MOMENT="$(date +%H%M%S)"
 YEAR="$(date +%Y)"
 MONTH="$(date +%m)"
 DAY="$(date +%d)"
-FILENAME=$$MOMENT.sql
-PGPASSWORD={postgres_password} pg_dump -h {postgres_host} -p {postgres_port} -U {postgres_user} {database_name} > {parent_directory}/$FILENAME
+FILENAME=$MOMENT.sql
+PGPASSWORD={postgres_password} pg_dump -h {postgres_endpoint} -p {postgres_port} -U {postgres_username} {database_name} > {parent_directory}/$FILENAME
 AWS_ACCESS_KEY_ID={aws_access_key_id} AWS_SECRET_ACCESS_KEY={aws_secret_access_key} AWS_DEFAULT_REGION={aws_region} aws s3 cp {parent_directory}/$FILENAME s3://{aws_s3_bucket}/{project_name}/$YEAR/$MONTH/$DAY/
 rm {parent_directory}/$FILENAME
 """
@@ -61,21 +62,22 @@ def configure_backups(
         aws_s3_bucket: str
 ):
     script_path = Path(parent_directory) / 'backup.sh'
-    script = POSTGRES_BACKUP_SCRIPT_TEMPLATE.format({
-        'project_name': project_name,
-        'parent_directory': parent_directory,
-        'postgres_username': postgres_username,
-        'postgres_password': postgres_password,
-        'postgres_endpoint': postgres_endpoint,
-        'postgres_port': postgres_port,
-        'database_name': database_name,
-        'aws_access_key_id': aws_access_key_id,
-        'aws_secret_access_key': aws_secret_access_key,
-        'aws_region': aws_region,
-        'aws_s3_bucket': aws_s3_bucket
-    })
+    script = POSTGRES_BACKUP_SCRIPT_TEMPLATE.format(
+        project_name=project_name,
+        parent_directory=parent_directory,
+        postgres_username=postgres_username,
+        postgres_password=postgres_password,
+        postgres_endpoint=postgres_endpoint,
+        postgres_port=postgres_port,
+        database_name=database_name,
+        aws_access_key_id=aws_access_key_id,
+        aws_secret_access_key=aws_secret_access_key,
+        aws_region=aws_region,
+        aws_s3_bucket=aws_s3_bucket
+    )
     script_path.write_text(script)
     script_path.chmod(script_path.stat().st_mode | stat.S_IEXEC)
+    os.system('sudo chown ubuntu:ubuntu %s' % script_path)
     print(f'{script_path} successfully created. Now you can add it to your cron.')
 
 

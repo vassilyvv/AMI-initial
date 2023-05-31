@@ -10,3 +10,4 @@ def configure(filename: str, project_name: str, api_domain: str):
     with open(filename, 'w') as f:
         for line in final_result:
             f.write(line)
+    os.system('sudo chown ubuntu:ubuntu %s' % filename)
