@@ -18,3 +18,9 @@ def validate_docker_image_name(context, parameter, value):
     if not re.match('^[a-zA-Z0-9-]+(-[a-zA-Z0-9-]+)*\/[a-zA-Z0-9-]+(-[a-zA-Z0-9-]+)*:[a-zA-Z0-9-]+(-[a-zA-Z0-9-]+)*$', value):
         raise click.BadParameter('Bad docker image name. Does it contain a tag?')
     return value
+
+
+def validate_unix_path(context, parameter, value):
+    if not re.match('^/([a-zA-Z0-9_-]+/)*$', value):
+        raise click.BadParameter('Bad unix path')
+    return value

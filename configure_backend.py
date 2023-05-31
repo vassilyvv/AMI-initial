@@ -1,5 +1,4 @@
 import shutil
-from pathlib import Path
 
 import click
 
@@ -11,11 +10,7 @@ DOCKER_COMPOSE_FILENAME = '/home/ubuntu/docker-compose.yaml'
 NGINX_CONFIG_FILENAME = '/home/ubuntu/nginx.conf'
 
 
-def create_outputs_directory():
-    Path('outputs').mkdir(exist_ok=True)
-
-
-def copy_templates_to_outputs_directory(use_celery: bool):
+def generate_config_files(use_celery: bool):
     shutil.copyfile(
         f'/home/ubuntu/templates/docker-compose/docker-compose-{"" if use_celery else "no-"}celery.yaml',
         DOCKER_COMPOSE_FILENAME
@@ -39,13 +34,12 @@ def copy_templates_to_outputs_directory(use_celery: bool):
               help="Example: myapi.com. Will be used in nginx configuration file.",
               callback=validate_domain)
 @click.option("--celery/--no-celery", prompt="Use celery?")
-def configure(project_name: str, docker_image_name: str, api_domain: str, celery: bool):
-    create_outputs_directory()
-    copy_templates_to_outputs_directory(celery)
+def configure_backend(project_name: str, docker_image_name: str, api_domain: str, celery: bool):
+    generate_config_files(celery)
     configure_nginx(NGINX_CONFIG_FILENAME, project_name, api_domain)
     configure_docker_compose(DOCKER_COMPOSE_FILENAME, project_name, docker_image_name)
 
 
 if __name__ == '__main__':
     print("ENSURE YOU'RE RUNNING THIS SCRIPT FROM PROJECT DIRECTORY ON HOST MACHINE")
-    configure()
+    configure_backend()
