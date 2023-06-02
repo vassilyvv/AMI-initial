@@ -9,7 +9,7 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - ./ssl/server.cert:/etc/ssl/certs/server.crt
+      - ./ssl/server.crt:/etc/ssl/certs/server.crt
       - ./ssl/server.key:/etc/ssl/private/server.key
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
 
